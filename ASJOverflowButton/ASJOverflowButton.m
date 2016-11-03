@@ -59,7 +59,7 @@
 {
   NSAssert(image, @"You must provide an image for the overflow button.");
   NSAssert(items.count, @"You must provide at least one ASJOverflowItem.");
-  
+
   self = [super init];
   if (self)
   {
@@ -111,12 +111,12 @@
 - (void)setupCustomView
 {
   UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-  
+
   button.frame = CGRectMake(0.0f, 0.0f, 44.0f, 44.0f);
-  button.autoresizingMask = self.autoresizingMasks;
+  //button.autoresizingMask = self.autoresizingMasks;
   [button setImage:_buttonImage forState:UIControlStateNormal];
   [button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-  
+
   self.customView = button;
 }
 
@@ -132,7 +132,7 @@
   [self setupWindow];
   [self setupMenu];
   [self handleBlocks];
-  
+
   _overflowMenu.alpha = 0.0f;
   [UIView animateWithDuration:0.4f delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState
                    animations:^
@@ -162,7 +162,7 @@
   _overflowWindow.tintColor = [UIApplication sharedApplication].delegate.window.tintColor;
   _overflowWindow.autoresizingMask = self.autoresizingMasks;
   _overflowWindow.rootViewController = [[UIViewController alloc] init];
-  
+
   UIWindow *topWindow = [UIApplication sharedApplication].windows.lastObject;
   _overflowWindow.windowLevel = topWindow.windowLevel + 1;
   [_overflowWindow makeKeyAndVisible];
@@ -171,10 +171,11 @@
 - (void)setupMenu
 {
   NSString *nibName = NSStringFromClass([ASJOverflowMenu class]);
-  _overflowMenu = (ASJOverflowMenu *)[[NSBundle mainBundle] loadNibNamed:nibName owner:nil options:nil].firstObject;
+  NSBundle *bundle = [NSBundle bundleForClass: [ASJOverflowMenu class]];
+  _overflowMenu = (ASJOverflowMenu *)[bundle loadNibNamed:nibName owner:nil options:nil].firstObject;
   _overflowMenu.autoresizingMask = self.autoresizingMasks;
   _overflowMenu.frame = _overflowWindow.bounds;
-  
+
   // look and feel
   _overflowMenu.items = _items;
   _overflowMenu.itemFont = _itemFont;
@@ -188,11 +189,11 @@
   _overflowMenu.separatorInsets = _separatorInsets;
   _overflowMenu.menuBackgroundColor = _menuBackgroundColor;
   _overflowMenu.itemHighlightedColor = _itemHighlightedColor;
-  
+
   // size
   _overflowMenu.menuMargins = _menuMargins;
   _overflowMenu.widthMultiplier = _widthMultiplier;
-  
+
   [_overflowWindow addSubview:_overflowMenu];
 }
 
@@ -210,11 +211,11 @@
        weakSelf.itemTapBlock(item, idx);
      }
    }];
-  
+
   [_overflowMenu setHideMenuBlock:^
    {
      [weakSelf hideMenu];
-     
+
      if (weakSelf.hideMenuBlock) {
        weakSelf.hideMenuBlock();
      }
